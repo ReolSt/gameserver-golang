@@ -23,7 +23,7 @@ func GetUser(db *sql.DB, id string) (User, error) {
 func CreateUser(
   db *sql.DB,
   user User) error {
-    stmt, err := db.Prepare("INSERT INTO user(id, password, name) VALUES(?, ?, ?)")
+    stmt, err := db.Prepare("insert into user(id, password, name) values(?, ?, ?)")
 
     if err != nil {
       log.Fatal(err)
@@ -32,6 +32,22 @@ func CreateUser(
 
     defer stmt.Close()
 
-    _, err = stmt.Exec(user.id, user.name, user.password)
+    _, err = stmt.Exec(user.id, user.password, user.name)
+    return err
+}
+
+func RemoveUser(
+  db *sql.DB,
+  id string) error {
+    stmt, err := db.Prepare("delete from user where id=(?)")
+
+    if err != nil {
+      log.Fatal(err)
+      return err
+    }
+
+    defer stmt.Close()
+
+    _, err = stmt.Exec(id)
     return err
 }
